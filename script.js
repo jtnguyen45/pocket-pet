@@ -1,6 +1,14 @@
 /*----- constants -----*/
-const PET_STATES = {
+const PET_STATES_GOOD = {
     "1": "happy",
+    "2": "full",
+    "3": "well-rested",
+    "4": "clean",
+    "5": "having fun",
+}
+
+const PET_STATES_BAD = {
+    "1": "unhappy",
     "2": "hungry",
     "3": "sleepy",
     "4": "dirty",
@@ -8,11 +16,11 @@ const PET_STATES = {
 }
 
 const PET_DESC = {
-    "1": "Happiness",
-    "2": "Hunger",
-    "3": "Energy",
-    "4": "Clean",
-    "5": "Fun",
+    "1": "happiness",
+    "2": "hunger",
+    "3": "energy",
+    "4": "clean",
+    "5": "fun",
 }
 
 /*----- state variables -----*/
@@ -53,35 +61,30 @@ function render() {
 }
 
 function renderPetStats() {
-    //prob do a forEach -> id is "stat1", "stat2" etc
-    //TODO: refactor
-    // for (let i = 1; i < 6; i++) {
-    //     const cellId = `stat${i}`;
-    //     const cellElement = document.getElementById(cellId);
-    //     cellElement.innerHTML = `${PET_DESC[i]}: ${PET_STATES}`
-    // }
+    for (let i = 1; i < 6; i++) {
+        const cellId = `stat${i}`;
+        const cellElement = document.getElementById(cellId);
+        cellElement.innerHTML = `${PET_DESC[i].toUpperCase()}: ${getPetState(i)}`;
+    }
 
-    const cellId1 = "stat1";
-    const cellElement1 = document.getElementById(cellId1);
-    cellElement1.innerHTML = `Happiness: ${happiness}`;
+    const cellId = "petLevel";
+    const cellElement = document.getElementById(cellId);
+    cellElement.innerHTML = `Level: ${level}`;
+}
 
-    const cellId2 = "stat2";
-    const cellElement2 = document.getElementById(cellId2);
-    cellElement2.innerHTML = `Hunger: ${hunger}`;
-
-    const cellId3 = "stat3";
-    const cellElement3 = document.getElementById(cellId3);
-    cellElement3.innerHTML = `Energy: ${energy}`;
-
-    const cellId4 = "stat4";
-    const cellElement4 = document.getElementById(cellId4);
-    cellElement4.innerHTML = `Clean: ${clean}`
-
-    const cellId5 = "stat5";
-    const cellElement5 = document.getElementById(cellId5);
-    cellElement5.innerHTML = `Fun: ${fun}`
-
-    const cellId6 = "petLevel";
-    const cellElement6 = document.getElementById(cellId6);
-    cellElement6.innerHTML = `Level: ${level}`;
+function getPetState(key) {
+    switch (key) {
+        case 1:
+            return happiness;
+        case 2:
+            return hunger;
+        case 3:
+            return energy;
+        case 4:
+            return clean;
+        case 5:
+            return fun;
+        default:
+            return "";
+    }
 }
