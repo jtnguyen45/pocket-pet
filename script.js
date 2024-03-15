@@ -1,18 +1,10 @@
 /*----- constants -----*/
-const PET_STATES_GOOD = {
-    "1": "happy",
-    "2": "full",
-    "3": "well-rested",
-    "4": "clean",
-    "5": "having fun",
-}
-
-const PET_STATES_BAD = { //could combine states and make bad neg num
-    "1": "unhappy",
-    "2": "hungry",
-    "3": "sleepy",
-    "4": "dirty",
-    "5": "bored",
+const PET_STATES = {
+    "1": {good: "happy", bad: "unhappy"},
+    "2": {good: "full", bad: "hungry"},
+    "3": {good: "well-rested", bad: "sleepy"},
+    "4": {good: "clean", bad: "dirty"},
+    "5": {good: "having fun", bad: "bored"},
 }
 
 const PET_DESC = {
@@ -39,6 +31,7 @@ const messageEl = document.querySelector("h3");
 const resetBtn = document.querySelector("#resetBtn");
 const audio = document.getElementById("bgPlayer");
 const petImg = document.getElementById("overlayCinna");
+const bgImg = document.getElementById("petBackground");
 
 /*----- event listeners -----*/
 resetBtn.addEventListener("click", init);
@@ -57,25 +50,31 @@ function init() {
     level = 1;
     isPetAlive = true;
     isActionHappening = false;
-    startPetStatDec();
+    decPetStat();
     petImg.src = "/images/defaultCinna.gif";
 
     render();
 }
 
 function render() {
-    //renderPet();
+    renderPet();
     renderMessage();
     renderControls();
     renderPetStats();
 }
 
+function renderPet() {
+    let imgSrc = "/images/defaultCinna.gif";
+    if (happiness <= 0) imgSrc = "/images/cryingCinna.gif";
+    else if (happiness < 40 && !isActionHappening) imgSrc = "/images/sadCinna.gif";
+    petImg.src = imgSrc;
+}
+
 function renderMessage() {
     //change message about pet
-    if (happiness > 40) messageEl.innerHTML = `${petName} is ${PET_STATES_GOOD[1]} !!`;
-    if (happiness < 40) {
-        messageEl.innerHTML = `${petName} is ${PET_STATES_BAD[1]} !!`;
-        petImg.src = "/images/sadCinna.gif";
+    if (happiness > 40) messageEl.innerHTML = `${petName} is ${PET_STATES[1].good} !!`;
+    if (happiness < 40 && !isActionHappening) {
+        messageEl.innerHTML = `${petName} is ${PET_STATES[1].bad} !!`;
     }
 }
 
@@ -85,11 +84,11 @@ function renderControls() {
 }
 
 function renderPetStats() {
-    for (let i = 1; i < 6; i++) {
-        const cellId = `stat${i}`;
+    Object.keys(PET_DESC).forEach(key => {
+        const cellId = `stat${key}`;
         const cellElement = document.getElementById(cellId);
-        cellElement.innerHTML = `${PET_DESC[i].toUpperCase()}: ${getPetState(i)}`;
-    }
+        cellElement.innerHTML = `${PET_DESC[key].toUpperCase()}: ${getPetState(parseInt(key))}`;
+    });
 
     const cellId = "petLevel";
     const cellElement = document.getElementById(cellId);
@@ -113,23 +112,23 @@ function getPetState(key) {
     }
 }
 
-function startPetStatDec() {
+function decPetStat() {
     setInterval(() => {
         if (happiness !== 0 && !isActionHappening){
             happiness -= 5;
             render();
         }
-    }, 3000);
+    }, 4000);
 }
 
 function handleHappiness() {
     isActionHappening = true;
-    happiness = happiness > 80 ? 100 : happiness += 15;
     petImg.src = "/images/happyCinna.gif";
-    render();
+    happiness = happiness > 80 ? 100 : happiness += 15;
+    //render();
     setTimeout(() => {
+        petImg.src = happiness >= 40 ? "/images/defaultCinna.gif" : "images/sadCinna.gif";
         isActionHappening = false;
-        petImg.src = "/images/defaultCinna.gif";
         render();
     }, 5000);
 }
