@@ -1,10 +1,10 @@
 /*----- constants -----*/
 const PET_STATES = {
-    "1": {good: "happy", bad: "unhappy"},
-    "2": {good: "full", bad: "hungry"},
-    "3": {good: "well-rested", bad: "sleepy"},
-    "4": {good: "clean", bad: "dirty"},
-    "5": {good: "having fun", bad: "bored"},
+    "1": {good: "happy", bad: "unhappy", dec: 5, time: 4},
+    "2": {good: "full", bad: "hungry", dec: 10, time: 6},
+    "3": {good: "well-rested", bad: "sleepy", dec: 10, time: 10},
+    "4": {good: "clean", bad: "dirty", dec: 10, time: 8},
+    "5": {good: "having fun", bad: "bored", dec: 5, time: 5},
 }
 
 const PET_DESC = {
@@ -44,7 +44,7 @@ audio.volume = 0.10;
 function init() {
     happiness = 100;
     hunger = 100;
-    energy = 100;
+    energy = 80;
     clean = 100;
     fun = 100;
     level = 1;
@@ -57,6 +57,7 @@ function init() {
 }
 
 function render() {
+    checkPetAlive();
     renderPet();
     renderMessage();
     renderControls();
@@ -65,7 +66,7 @@ function render() {
 
 function renderPet() {
     let imgSrc = "/images/defaultCinna.gif";
-    if (happiness <= 0) imgSrc = "/images/cryingCinna.gif";
+    if (!isPetAlive) imgSrc = "/images/cryingCinna.gif";
     else if (happiness < 40 && !isActionHappening) imgSrc = "/images/sadCinna.gif";
     petImg.src = imgSrc;
 }
@@ -76,6 +77,7 @@ function renderMessage() {
     if (happiness < 40 && !isActionHappening) {
         messageEl.innerHTML = `${petName} is ${PET_STATES[1].bad} !!`;
     }
+    if (!isPetAlive) messageEl.innerHTML = `You neglected ${petName}! They ran away from home!`;
 }
 
 function renderControls() {
@@ -113,12 +115,40 @@ function getPetState(key) {
 }
 
 function decPetStat() {
-    setInterval(() => {
-        if (happiness !== 0 && !isActionHappening){
-            happiness -= 5;
-            render();
-        }
-    }, 4000);
+    Object.keys(PET_STATES).forEach(key => {
+        const dec = PET_STATES[key].dec;
+        const sec = PET_STATES[key].time;
+        const intervalId = setInterval(() => {
+            if (!isActionHappening && isPetAlive) {
+                switch (parseInt(key)) {
+                    case 1:
+                        happiness -= dec;
+                        break;
+                    case 2:
+                        hunger -= dec;
+                        break;
+                    case 3:
+                        energy -= dec;
+                        break;
+                    case 4:
+                        clean -= dec;
+                        break;
+                    case 5:
+                        fun -= dec;
+                        break;
+                    default:
+                        break;
+                }
+                render();
+            }
+        }, sec * 1000);
+    });
+}
+
+function checkPetAlive() {
+    if (happiness <= 0 || hunger <= 0 || energy <= 0 || clean <= 0 || fun <= 0) {
+        isPetAlive = false;
+    }
 }
 
 function handleHappiness() {
