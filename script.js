@@ -25,6 +25,7 @@ let fun;
 let level;
 let isPetAlive;
 let isActionHappening;
+let intervalIds = [];
 
 /*----- cached elements  -----*/
 const messageEl = document.querySelector("h3");
@@ -32,6 +33,7 @@ const resetBtn = document.querySelector("#resetBtn");
 const audio = document.getElementById("bgPlayer");
 const petImg = document.getElementById("overlayCinna");
 const bgImg = document.getElementById("petBackground");
+const images = document.getElementById("imageContainer")
 
 /*----- event listeners -----*/
 resetBtn.addEventListener("click", init);
@@ -52,6 +54,7 @@ function init() {
     isActionHappening = false;
     decPetStat();
     petImg.src = "/images/defaultCinna.gif";
+    images.style.filter = "";
 
     render();
 }
@@ -66,7 +69,10 @@ function render() {
 
 function renderPet() {
     let imgSrc = "/images/defaultCinna.gif";
-    if (!isPetAlive) imgSrc = "/images/cryingCinna.gif";
+    if (!isPetAlive) {
+        imgSrc = "/images/cryingCinna.gif";
+        images.style.filter = "brightness(0.5)";
+    } 
     else if (happiness < 40 && !isActionHappening) imgSrc = "/images/sadCinna.gif";
     petImg.src = imgSrc;
 }
@@ -115,6 +121,9 @@ function getPetState(key) {
 }
 
 function decPetStat() {
+    intervalIds.forEach(id => clearInterval(id));
+    intervalIds = [];
+
     Object.keys(PET_STATES).forEach(key => {
         const dec = PET_STATES[key].dec;
         const sec = PET_STATES[key].time;
@@ -142,6 +151,7 @@ function decPetStat() {
                 render();
             }
         }, sec * 1000);
+        intervalIds.push(intervalId);
     });
 }
 
