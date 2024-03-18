@@ -1,10 +1,10 @@
 /*----- constants -----*/
 const PET_STATES = {
     "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, img: "/images/happyCinna.gif"},
-    "2": {good: "full", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6},
-    "3": {good: "well-rested", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10},
-    "4": {good: "clean", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8},
-    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5},
+    "2": {good: "full", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, img: "/images/drinkingCinna.gif"},
+    "3": {good: "well-rested", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, img: "/images/sleepingCinna.gif"},
+    "4": {good: "clean", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, img: "/images/bathCinna.gif"},
+    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, img: "/images/skatingCinna.gif"},
 }
 
 const PET_DESC = {
@@ -33,7 +33,7 @@ const images = document.getElementById("imageContainer")
 resetBtn.addEventListener("click", init);
 document.getElementById("buttonsContainer").addEventListener("click", function(evt) {
     const button = evt.target;
-    if (button.classList.contains("actionBtn")) handleAction(evt);
+    if (button.classList.contains("actionBtn") && !isActionHappening) handleAction(evt);
 });
 
 /*----- functions -----*/
@@ -41,11 +41,11 @@ init();
 audio.volume = 0.10;
 
 function init() {
-    PET_STATES[1].value = 100;
+    PET_STATES[1].value = 90;
     PET_STATES[2].value  = 100;
     PET_STATES[3].value  = 80;
     PET_STATES[4].value  = 100;
-    PET_STATES[5].value  = 100;
+    PET_STATES[5].value  = 75;
     level = 1;
     isPetAlive = true;
     isActionHappening = false;
@@ -109,7 +109,7 @@ function decPetStat() {
         const sec = PET_STATES[key].time;
         const intervalId = setInterval(() => {
             if (!isActionHappening && isPetAlive) {
-                PET_STATES[key].value -= dec;
+                PET_STATES[key].value =  PET_STATES[key].value - dec <= 0 ? 0 : PET_STATES[key].value - dec;
                 render();
             }
         }, sec * 1000);
@@ -131,8 +131,10 @@ function handleAction(evt) {
     const key = parseInt(actionId.charAt(6));
     PET_STATES[key].value = PET_STATES[key].value + PET_STATES[key].inc > 100 ? 100 : PET_STATES[key].value + PET_STATES[key].inc;
     petImg.src = PET_STATES[key].img;
+    if (key === 3) images.style.filter = "brightness(0.5)";
     setTimeout(() => {
         isActionHappening = false;
         render();
+        images.style.filter = "";
     }, 5000);
 }

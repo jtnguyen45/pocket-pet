@@ -91,7 +91,7 @@ h3 {
     position: absolute;
     width: 30vmin;
     z-index: 1;
-    top: 60%;
+    top: 58%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
