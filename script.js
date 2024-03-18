@@ -18,6 +18,7 @@ const PET_DESC = {
 /*----- state variables -----*/
 let petName = "Cinnamoroll";
 let level;
+let isStatsGood;
 let isPetAlive;
 let isActionHappening;
 let intervalIds = [];
@@ -47,6 +48,7 @@ function init() {
     PET_STATES[4].value  = 100;
     PET_STATES[5].value  = 75;
     level = 1;
+    isStatsGood = true;
     isPetAlive = true;
     isActionHappening = false;
     decPetStat();
@@ -70,7 +72,7 @@ function renderPet() {
         imgSrc = "/images/cryingCinna.gif";
         images.style.filter = "brightness(0.5)";
     } 
-    else if (PET_STATES[1].value < 40 && !isActionHappening) imgSrc = "/images/sadCinna.gif";
+    else if (!isStatsGood && !isActionHappening) imgSrc = "/images/sadCinna.gif";
     petImg.src = imgSrc;
 }
 
@@ -99,12 +101,16 @@ function renderPetStats() {
 }
 
 function getPetStatus() {
-    if (PET_STATES[1].value >= 40 && PET_STATES[2].value >= 40 && PET_STATES[3].value >= 40 && PET_STATES[4].value >= 40 && PET_STATES[5].value >= 40) return "happy";
+    if (PET_STATES[1].value >= 40 && PET_STATES[2].value >= 40 && PET_STATES[3].value >= 40 && PET_STATES[4].value >= 40 && PET_STATES[5].value >= 40) {
+        isStatsGood = true;
+        return "happy";
+    }
     
     let strArr = [];
     Object.keys(PET_STATES).forEach(key => {
         if (PET_STATES[key].value < 40) {
             strArr.push(PET_STATES[key].bad);
+            isStatsGood = false;
         }
     });
 
