@@ -1,9 +1,9 @@
 /*----- constants -----*/
 const PET_STATES = {
     "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, img: "/images/happyCinna.gif"},
-    "2": {good: "full", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, img: "/images/drinkingCinna.gif"},
-    "3": {good: "well-rested", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, img: "/images/sleepingCinna.gif"},
-    "4": {good: "clean", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, img: "/images/bathCinna.gif"},
+    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, img: "/images/drinkingCinna.gif"},
+    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, img: "/images/sleepingCinna.gif"},
+    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, img: "/images/bathCinna.gif"},
     "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, img: "/images/skatingCinna.gif"},
 }
 
@@ -33,7 +33,7 @@ const images = document.getElementById("imageContainer")
 resetBtn.addEventListener("click", init);
 document.getElementById("buttonsContainer").addEventListener("click", function(evt) {
     const button = evt.target;
-    if (button.classList.contains("actionBtn") && !isActionHappening) handleAction(evt);
+    if (button.classList.contains("actionBtn") && !isActionHappening && isPetAlive) handleAction(evt);
 });
 
 /*----- functions -----*/
@@ -75,12 +75,10 @@ function renderPet() {
 }
 
 function renderMessage() {
-    //change message about pet
-    if (PET_STATES[1].value > 40) messageEl.innerHTML = `${petName} is ${PET_STATES[1].good} !!`;
-    if (PET_STATES[1].value < 40 && !isActionHappening) {
-        messageEl.innerHTML = `${petName} is ${PET_STATES[1].bad} !!`;
-    }
+    let petStatus = getPetStatus();
+    console.log(petStatus)
     if (!isPetAlive) messageEl.innerHTML = `You neglected ${petName}! They ran away from home!`;
+    else messageEl.innerHTML = `${petName} is ${petStatus}!!`
 }
 
 function renderControls() {
@@ -98,6 +96,24 @@ function renderPetStats() {
     const cellId = "petLevel";
     const cellElement = document.getElementById(cellId);
     cellElement.innerHTML = `Level: ${level}`;
+}
+
+function getPetStatus() {
+    if (PET_STATES[1].value >= 40 && PET_STATES[2].value >= 40 && PET_STATES[3].value >= 40 && PET_STATES[4].value >= 40 && PET_STATES[5].value >= 40) return "happy";
+    
+    let strArr = [];
+    Object.keys(PET_STATES).forEach(key => {
+        if (PET_STATES[key].value < 40) {
+            strArr.push(PET_STATES[key].bad);
+        }
+    });
+
+    let petStr = "";
+    for (let i = 0; i < strArr.length; i++) {
+        if (i === strArr.length - 1) petStr = petStr.concat(strArr[i]);
+        else petStr = petStr.concat(strArr[i], " and ");
+    }
+    return petStr;
 }
 
 function decPetStat() {
@@ -131,6 +147,7 @@ function handleAction(evt) {
     const key = parseInt(actionId.charAt(6));
     PET_STATES[key].value = PET_STATES[key].value + PET_STATES[key].inc > 100 ? 100 : PET_STATES[key].value + PET_STATES[key].inc;
     petImg.src = PET_STATES[key].img;
+    messageEl.innerHTML = `${petName} is ${PET_STATES[key].good}!!`;
     if (key === 3) images.style.filter = "brightness(0.5)";
     setTimeout(() => {
         isActionHappening = false;
