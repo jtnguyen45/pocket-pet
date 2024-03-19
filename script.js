@@ -26,6 +26,7 @@ const LEVEL_EXP = {
 const SOUNDS = {
     "1": "https://epsilon.vgmsite.com/soundtracks/animal-crossing-k.k.-slider-complete-songs-collection/fftixgzsli/2-89%20Bubblegum%20K.K.%20%28Radio%29.mp3",
     "-1": "https://epsilon.vgmsite.com/soundtracks/animal-crossing-k.k.-slider-complete-songs-collection/ponoeqydxl/2-95%20Farewell%20%28Radio%29.mp3",
+    "2": "https://epsilon.vgmsite.com/soundtracks/animal-crossing-k.k.-slider-complete-songs-collection/cmakslxqel/2-71%20K.K.%20Metal%20%28Radio%29.mp3",
 }
 
 /*----- state variables -----*/
@@ -37,12 +38,14 @@ let isPetAlive;
 let isWinner;
 let isActionHappening;
 let intervalIds = [];
+let easterEggTimeout;
 
 /*----- cached elements  -----*/
 const messageEl = document.querySelector("h3");
 const resetBtn = document.querySelector("#resetBtn");
 const audio = document.getElementById("bgPlayer");
 const audioBtn = document.getElementById("bgMusic");
+const bgImg = document.getElementById("petBackground");
 const petImg = document.getElementById("overlayCinna");
 const images = document.getElementById("imageContainer");
 const gameOver = document.getElementById("gameOverImg");
@@ -59,6 +62,7 @@ document.getElementById("buttonsContainer").addEventListener("click", function(e
 init();
 
 function init() {
+    clearTimeout(easterEggTimeout);
     PET_STATES[1].value = 90;
     PET_STATES[2].value  = 100;
     PET_STATES[3].value  = 80;
@@ -71,7 +75,9 @@ function init() {
     isWinner = false;
     isActionHappening = false;
     decPetStat();
+    bgImg.src = "/images/pet-background.jpg";
     petImg.src = "/images/defaultCinna.gif";
+    petImg.style.display = "block";
     images.style.filter = "";
     gameOver.style.display = "none";
     playAudio(SOUNDS[1]);
@@ -107,6 +113,7 @@ function renderMessage() {
     if (!isPetAlive) messageEl.innerHTML = `You neglected ${petName}! They ran away from home!`;
     else if (isWinner) {
         messageEl.innerHTML = `You're a great owner! ${petName} evolved! You win!`
+        winEasterEgg();
     }
     else messageEl.innerHTML = `${petName} is ${petStatus}!!`
 }
@@ -222,4 +229,19 @@ function handleAction(evt) {
         render();
         images.style.filter = "";
     }, 5000);
+}
+
+function winEasterEgg() {
+    easterEggTimeout = setTimeout(() => {
+        bgImg.src = "/images/buffCinna.gif";
+        petImg.style.display = "none";
+        playAudio(SOUNDS[2]);
+
+        PET_STATES[1].value = 9999;
+        PET_STATES[2].value = 9999;
+        PET_STATES[3].value = 9999;
+        PET_STATES[4].value = 9999;
+        PET_STATES[5].value = 9999;
+        render();
+    }, 10000)
 }
