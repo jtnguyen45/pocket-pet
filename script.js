@@ -28,7 +28,8 @@ const messageEl = document.querySelector("h3");
 const resetBtn = document.querySelector("#resetBtn");
 const audio = document.getElementById("bgPlayer");
 const petImg = document.getElementById("overlayCinna");
-const images = document.getElementById("imageContainer")
+const images = document.getElementById("imageContainer");
+const gameOver = document.getElementById("gameOverImg");
 
 /*----- event listeners -----*/
 resetBtn.addEventListener("click", init);
@@ -54,6 +55,7 @@ function init() {
     decPetStat();
     petImg.src = "/images/defaultCinna.gif";
     images.style.filter = "";
+    gameOver.style.display = "none";
 
     render();
 }
@@ -71,6 +73,7 @@ function renderPet() {
     if (!isPetAlive) {
         imgSrc = "/images/cryingCinna.gif";
         images.style.filter = "brightness(0.5)";
+        gameOver.style.display = "block";
     } 
     else if (!isStatsGood && !isActionHappening) imgSrc = "/images/sadCinna.gif";
     petImg.src = imgSrc;
