@@ -34,6 +34,7 @@ let level;
 let exp;
 let isStatsGood;
 let isPetAlive;
+let isWinner;
 let isActionHappening;
 let intervalIds = [];
 
@@ -51,7 +52,7 @@ resetBtn.addEventListener("click", init);
 audioBtn.addEventListener("click", handleMusic)
 document.getElementById("buttonsContainer").addEventListener("click", function(evt) {
     const button = evt.target;
-    if (button.classList.contains("actionBtn") && !isActionHappening && isPetAlive) handleAction(evt);
+    if (button.classList.contains("actionBtn") && !isActionHappening && isPetAlive && !isWinner) handleAction(evt);
 });
 
 /*----- functions -----*/
@@ -67,6 +68,7 @@ function init() {
     exp = 0;
     isStatsGood = true;
     isPetAlive = true;
+    isWinner = false;
     isActionHappening = false;
     decPetStat();
     petImg.src = "/images/defaultCinna.gif";
@@ -92,7 +94,10 @@ function renderPet() {
         images.style.filter = "brightness(0.5)";
         gameOver.style.display = "block";
         playAudio(SOUNDS[-1]);
-    } 
+    }
+    else if (isWinner) {
+        imgSrc = "/images/levelupCinna.gif"
+    }
     else if (!isStatsGood && !isActionHappening) imgSrc = "/images/sadCinna.gif";
     petImg.src = imgSrc;
 }
@@ -100,6 +105,9 @@ function renderPet() {
 function renderMessage() {
     let petStatus = getPetStatus();
     if (!isPetAlive) messageEl.innerHTML = `You neglected ${petName}! They ran away from home!`;
+    else if (isWinner) {
+        messageEl.innerHTML = `You're a great owner! ${petName} evolved! You win!`
+    }
     else messageEl.innerHTML = `${petName} is ${petStatus}!!`
 }
 
@@ -134,17 +142,25 @@ function getPetStatus() {
         }
     });
 
+    if (strArr.length === 1) return strArr[0];
+
     let petStr = "";
     for (let i = 0; i < strArr.length; i++) {
-        if (i === strArr.length - 1) petStr = petStr.concat(strArr[i]);
-        else petStr = petStr.concat(strArr[i], " and ");
+        if (i === strArr.length - 1) petStr = petStr.concat("and ", strArr[i]);
+        else petStr = petStr.concat(strArr[i], ", ");
     }
     return petStr;
 }
 
 function getPetLevel() {
-    if (LEVEL_EXP[level] > exp) return level;
-    return level++;
+    if (LEVEL_EXP[level] <= exp) {
+        level++;
+        if (level === 5) {
+            isWinner = true;
+            render();
+        }
+    }
+    return level;
 }
 
 function decPetStat() {
@@ -155,7 +171,7 @@ function decPetStat() {
         const dec = PET_STATES[key].dec;
         const sec = PET_STATES[key].time;
         const intervalId = setInterval(() => {
-            if (!isActionHappening && isPetAlive) {
+            if (!isActionHappening && isPetAlive && !isWinner) {
                 PET_STATES[key].value =  PET_STATES[key].value - dec <= 0 ? 0 : PET_STATES[key].value - dec;
                 render();
             }

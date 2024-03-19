@@ -111,6 +111,10 @@ h3 {
     background-color: var(--background-pink);
 }
 
+#instructionsContainer {
+    text-align: center;
+}
+
 #leftMainContainer {
     display: flex;
     flex-direction: column;
