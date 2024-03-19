@@ -23,6 +23,11 @@ const LEVEL_EXP = {
     "5": 500,
 }
 
+const SOUNDS = {
+    "1": "https://epsilon.vgmsite.com/soundtracks/animal-crossing-k.k.-slider-complete-songs-collection/fftixgzsli/2-89%20Bubblegum%20K.K.%20%28Radio%29.mp3",
+    "-1": "https://epsilon.vgmsite.com/soundtracks/animal-crossing-k.k.-slider-complete-songs-collection/ponoeqydxl/2-95%20Farewell%20%28Radio%29.mp3",
+}
+
 /*----- state variables -----*/
 let petName = "Cinnamoroll";
 let level;
@@ -36,12 +41,14 @@ let intervalIds = [];
 const messageEl = document.querySelector("h3");
 const resetBtn = document.querySelector("#resetBtn");
 const audio = document.getElementById("bgPlayer");
+const audioBtn = document.getElementById("bgMusic");
 const petImg = document.getElementById("overlayCinna");
 const images = document.getElementById("imageContainer");
 const gameOver = document.getElementById("gameOverImg");
 
 /*----- event listeners -----*/
 resetBtn.addEventListener("click", init);
+audioBtn.addEventListener("click", handleMusic)
 document.getElementById("buttonsContainer").addEventListener("click", function(evt) {
     const button = evt.target;
     if (button.classList.contains("actionBtn") && !isActionHappening && isPetAlive) handleAction(evt);
@@ -49,7 +56,6 @@ document.getElementById("buttonsContainer").addEventListener("click", function(e
 
 /*----- functions -----*/
 init();
-audio.volume = 0.10;
 
 function init() {
     PET_STATES[1].value = 90;
@@ -66,6 +72,7 @@ function init() {
     petImg.src = "/images/defaultCinna.gif";
     images.style.filter = "";
     gameOver.style.display = "none";
+    playAudio(SOUNDS[1]);
 
     render();
 }
@@ -84,6 +91,7 @@ function renderPet() {
         imgSrc = "/images/cryingCinna.gif";
         images.style.filter = "brightness(0.5)";
         gameOver.style.display = "block";
+        playAudio(SOUNDS[-1]);
     } 
     else if (!isStatsGood && !isActionHappening) imgSrc = "/images/sadCinna.gif";
     petImg.src = imgSrc;
@@ -159,6 +167,26 @@ function decPetStat() {
 function checkPetAlive() {
     if (PET_STATES[1].value <= 0 || PET_STATES[2].value <= 0 || PET_STATES[3].value <= 0 || PET_STATES[4].value <= 0 || PET_STATES[5].value <= 0) {
         isPetAlive = false;
+    }
+}
+
+function playAudio(src) {
+    let isAudioPaused = audio.paused;
+    audio.src = src;
+    if (!isAudioPaused) {
+        audio.play();
+    }
+}
+
+function handleMusic() {
+    if (audio.paused) {
+        audio.volume = 0.1;
+        audio.play();
+        audioBtn.innerHTML = "MUSIC: ON";
+    }
+    else {
+        audio.pause();
+        audioBtn.innerHTML = "MUSIC: OFF";
     }
 }
 
