@@ -1,10 +1,10 @@
 /*----- constants -----*/
 const PET_STATES = {
-    "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, img: "/images/happyCinna.gif"},
-    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, img: "/images/drinkingCinna.gif"},
-    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, img: "/images/sleepingCinna.gif"},
-    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, img: "/images/bathCinna.gif"},
-    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, img: "/images/skatingCinna.gif"},
+    "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, exp: 20, img: "/images/happyCinna.gif"},
+    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, exp: 15, img: "/images/drinkingCinna.gif"},
+    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, exp: 10, img: "/images/sleepingCinna.gif"},
+    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, exp: 10, img: "/images/bathCinna.gif"},
+    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, exp: 25, img: "/images/skatingCinna.gif"},
 }
 
 const PET_DESC = {
@@ -15,9 +15,18 @@ const PET_DESC = {
     "5": "fun",
 }
 
+const LEVEL_EXP = {
+    "1": 100,
+    "2": 200,
+    "3": 300,
+    "4": 400,
+    "5": 500,
+}
+
 /*----- state variables -----*/
 let petName = "Cinnamoroll";
 let level;
+let exp;
 let isStatsGood;
 let isPetAlive;
 let isActionHappening;
@@ -49,6 +58,7 @@ function init() {
     PET_STATES[4].value  = 100;
     PET_STATES[5].value  = 75;
     level = 1;
+    exp = 0;
     isStatsGood = true;
     isPetAlive = true;
     isActionHappening = false;
@@ -81,7 +91,6 @@ function renderPet() {
 
 function renderMessage() {
     let petStatus = getPetStatus();
-    console.log(petStatus)
     if (!isPetAlive) messageEl.innerHTML = `You neglected ${petName}! They ran away from home!`;
     else messageEl.innerHTML = `${petName} is ${petStatus}!!`
 }
@@ -100,7 +109,7 @@ function renderPetStats() {
 
     const cellId = "petLevel";
     const cellElement = document.getElementById(cellId);
-    cellElement.innerHTML = `Level: ${level}`;
+    cellElement.innerHTML = `Level: ${getPetLevel()}`;
 }
 
 function getPetStatus() {
@@ -123,6 +132,11 @@ function getPetStatus() {
         else petStr = petStr.concat(strArr[i], " and ");
     }
     return petStr;
+}
+
+function getPetLevel() {
+    if (LEVEL_EXP[level] > exp) return level;
+    return level++;
 }
 
 function decPetStat() {
@@ -155,6 +169,7 @@ function handleAction(evt) {
 
     const key = parseInt(actionId.charAt(6));
     PET_STATES[key].value = PET_STATES[key].value + PET_STATES[key].inc > 100 ? 100 : PET_STATES[key].value + PET_STATES[key].inc;
+    exp += PET_STATES[key].exp;
     petImg.src = PET_STATES[key].img;
     messageEl.innerHTML = `${petName} is ${PET_STATES[key].good}!!`;
     if (key === 3) images.style.filter = "brightness(0.5)";
