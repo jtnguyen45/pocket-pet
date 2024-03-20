@@ -1,10 +1,10 @@
 /*----- constants -----*/
 const PET_STATES = {
-    "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, exp: 20, img: "/images/happyCinna.gif"},
-    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, exp: 15, img: "/images/drinkingCinna.gif"},
-    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, exp: 10, img: "/images/sleepingCinna.gif"},
-    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, exp: 10, img: "/images/bathCinna.gif"},
-    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, exp: 25, img: "/images/skatingCinna.gif"},
+    "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, exp: 20, img: "images/happyCinna.gif"},
+    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, exp: 15, img: "images/drinkingCinna.gif"},
+    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, exp: 10, img: "images/sleepingCinna.gif"},
+    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, exp: 10, img: "images/bathCinna.gif"},
+    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, exp: 25, img: "images/skatingCinna.gif"},
 }
 
 const PET_DESC = {
@@ -75,8 +75,8 @@ function init() {
     isWinner = false;
     isActionHappening = false;
     decPetStat();
-    bgImg.src = "/images/pet-background.jpg";
-    petImg.src = "/images/defaultCinna.gif";
+    bgImg.src = "images/pet-background.jpg";
+    petImg.src = "images/defaultCinna.gif";
     petImg.style.display = "block";
     images.style.filter = "";
     gameOver.style.display = "none";
@@ -94,17 +94,17 @@ function render() {
 }
 
 function renderPet() {
-    let imgSrc = "/images/defaultCinna.gif";
+    let imgSrc = "images/defaultCinna.gif";
     if (!isPetAlive) {
-        imgSrc = "/images/cryingCinna.gif";
+        imgSrc = "images/cryingCinna.gif";
         images.style.filter = "brightness(0.5)";
         gameOver.style.display = "block";
         playAudio(SOUNDS[-1]);
     }
     else if (isWinner) {
-        imgSrc = "/images/levelupCinna.gif"
+        imgSrc = "images/levelupCinna.gif"
     }
-    else if (!isStatsGood && !isActionHappening) imgSrc = "/images/sadCinna.gif";
+    else if (!isStatsGood && !isActionHappening) imgSrc = "images/sadCinna.gif";
     petImg.src = imgSrc;
 }
 
@@ -233,7 +233,7 @@ function handleAction(evt) {
 
 function winEasterEgg() {
     easterEggTimeout = setTimeout(() => {
-        bgImg.src = "/images/buffCinna.gif";
+        bgImg.src = "images/buffCinna.gif";
         petImg.style.display = "none";
         playAudio(SOUNDS[2]);
 
