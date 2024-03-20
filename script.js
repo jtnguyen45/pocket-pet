@@ -49,14 +49,26 @@ const bgImg = document.getElementById("petBackground");
 const petImg = document.getElementById("overlayCinna");
 const images = document.getElementById("imageContainer");
 const gameOver = document.getElementById("gameOverImg");
+const hoverSound = document.getElementById("hoverSound");
+const buttonsContainer = document.getElementById("buttonsContainer");
+const buttons = document.querySelectorAll("button");
 
 /*----- event listeners -----*/
 resetBtn.addEventListener("click", init);
 audioBtn.addEventListener("click", handleMusic)
-document.getElementById("buttonsContainer").addEventListener("click", function(evt) {
+buttonsContainer.addEventListener("click", function(evt) {
     const button = evt.target;
     if (button.classList.contains("actionBtn") && !isActionHappening && isPetAlive && !isWinner) handleAction(evt);
 });
+
+buttons.forEach(button => {
+    button.addEventListener("mouseenter", () => {
+        hoverSound.volume = "0.075";
+        hoverSound.currentTime = 0;
+        hoverSound.play();
+    });
+});
+
 
 /*----- functions -----*/
 init();
