@@ -1,10 +1,10 @@
 /*----- constants -----*/
 const PET_STATES = {
-    "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, exp: 20, img: "images/happyCinna.gif"},
-    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, exp: 15, img: "images/drinkingCinna.gif"},
-    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, exp: 10, img: "images/sleepingCinna.gif"},
-    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, exp: 10, img: "images/bathCinna.gif"},
-    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, exp: 25, img: "images/skatingCinna.gif"},
+    "1": {good: "happy", bad: "unhappy", value: 100, inc: 15, dec: 5, time: 4, exp: 20, img: "images/happyCinna.gif",},
+    "2": {good: "eating", bad: "hungry", value: 100, inc: 25, dec: 10, time: 6, exp: 15, img: "images/drinkingCinna.gif",},
+    "3": {good: "sleeping", bad: "sleepy", value: 100, inc: 100, dec: 10, time: 10, exp: 10, img: "images/sleepingCinna.gif",},
+    "4": {good: "taking a bath", bad: "dirty", value: 100, inc: 100, dec: 10, time: 8, exp: 10, img: "images/bathCinna.gif",},
+    "5": {good: "having fun", bad: "bored", value: 100, inc: 20, dec: 5, time: 5, exp: 25, img: "images/skatingCinna.gif",},
 }
 
 const PET_DESC = {
@@ -69,7 +69,6 @@ buttons.forEach(button => {
     });
 });
 
-
 /*----- functions -----*/
 init();
 
@@ -112,11 +111,9 @@ function renderPet() {
         images.style.filter = "brightness(0.5)";
         gameOver.style.display = "block";
         playAudio(SOUNDS[-1]);
-    }
-    else if (isWinner) {
+    } else if (isWinner) {
         imgSrc = "images/levelupCinna.gif"
-    }
-    else if (!isStatsGood && !isActionHappening) imgSrc = "images/sadCinna.gif";
+    } else if (!isStatsGood && !isActionHappening) imgSrc = "images/sadCinna.gif";
     petImg.src = imgSrc;
 }
 
@@ -126,8 +123,7 @@ function renderMessage() {
     else if (isWinner) {
         messageEl.innerHTML = `You're a great owner! ${petName} evolved! You win!`
         winEasterEgg();
-    }
-    else messageEl.innerHTML = `${petName} is ${petStatus}!!`
+    } else messageEl.innerHTML = `${petName} is ${petStatus}!!`
 }
 
 function renderControls() {
@@ -218,8 +214,7 @@ function handleMusic() {
         audio.volume = 0.1;
         audio.play();
         audioBtn.innerHTML = "MUSIC: ON";
-    }
-    else {
+    } else {
         audio.pause();
         audioBtn.innerHTML = "MUSIC: OFF";
     }
@@ -249,11 +244,10 @@ function winEasterEgg() {
         petImg.style.display = "none";
         playAudio(SOUNDS[2]);
 
-        PET_STATES[1].value = 9999;
-        PET_STATES[2].value = 9999;
-        PET_STATES[3].value = 9999;
-        PET_STATES[4].value = 9999;
-        PET_STATES[5].value = 9999;
+        Object.keys(PET_STATES).forEach(key => {
+            PET_STATES[key].value = 9999;
+        });
+
         render();
     }, 10000)
 }
