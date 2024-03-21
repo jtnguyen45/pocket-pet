@@ -63,9 +63,11 @@ buttonsContainer.addEventListener("click", function(evt) {
 
 buttons.forEach(button => {
     button.addEventListener("mouseenter", () => {
-        hoverSound.volume = "0.075";
-        hoverSound.currentTime = 0;
-        hoverSound.play();
+        if (!audio.paused) {
+            hoverSound.volume = "0.075";
+            hoverSound.currentTime = 0;
+            hoverSound.play();
+        }
     });
 });
 
