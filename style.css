@@ -170,3 +170,51 @@ button:hover {
     border-color: white;
     cursor: url(./images/cursors/hoverCursor.png), auto;
 }
+
+@media screen and (max-width: 600px) {
+    body {
+        background-size: cover;
+        background-attachment: fixed;
+        overflow: visible;
+    }
+
+    #mainGameContainer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #instructionsContainer {
+        width: 80%;
+    }
+    
+    #petLevelsContainer {
+        width: 70%;
+        display: grid;
+        justify-content: center;
+        grid-template-columns: repeat(3, 15vmin);
+        grid-template-rows: repeat(2, 5vmin);
+        gap: 3vmin;
+    }
+
+    #petLevelsContainer > h4 {
+        grid-column: 1 / -1;
+    }
+
+    h4 {
+        margin-bottom: 3px;
+        font-size: 14px;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    #petLevelsContainer > p {
+        font-size: 12px;
+    }
+
+    #buttonsContainer {
+        grid-template-columns: repeat(3, 15vmin);
+        grid-template-rows: repeat(2, 7vmin);
+    }
+}
